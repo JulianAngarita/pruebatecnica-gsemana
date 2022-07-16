@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Grid,
     Header,
@@ -8,9 +8,23 @@ import {
     Popup,
   } from 'semantic-ui-react'
 import bg from '../../assets/69.jpeg'
+import { getTags } from '../../services/tag/tag-srv';
+import ModalCreatePost from '../modals/modal-create-post';
 
 const BodyComponent = () => {
 
+    const [tags, setTags] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+
+    const tagsConsult = async () => {
+        const tags = await getTags();
+        setTags(tags);
+    }
+
+    useEffect(() => {
+        tagsConsult()
+    }, [])
+    console.log(tags);
     return(
         <Grid
             columns={3}
@@ -42,20 +56,22 @@ const BodyComponent = () => {
                         }
                     />
                     <span>
-                    <Button size="tiny" floated='right' style={{backgroundImage: `url(${bg})`, color: 'white'}}>
+                    <Button 
+                        size="tiny" 
+                        floated='right' 
+                        style={{backgroundImage: `url(${bg})`, color: 'white'}}
+                        onClick={() => setShowModal(true)}
+                    >
                         <Icon name="add"/>
                         NUEVA NOTA
                     </Button>
                     </span>
                 </Header>
-                {/* <FormularioTrabajo
-                    modalProyecto={modalProyecto}
-                    proyecto={proyecto}
-                    guardar={proyectoNuevo}
-                    setProyecto={setProyecto}
-                    setModalProyecto={setModalProyecto}
+                <ModalCreatePost
+                    showModal={showModal}
+                    setShowModal={setShowModal}
                 />
-                <ModalMensaje
+                {/* <ModalMensaje
                     estatus={modalMensajeEstatus}
                     setModalMensajeEstatus={setModalMensajeEstatus}
                 /> */}

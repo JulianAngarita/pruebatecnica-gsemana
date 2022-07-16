@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Grid, Image, Icon} from 'semantic-ui-react'
+import {Card, Grid, Image} from 'semantic-ui-react'
 
 const PostComponent = () => {
     return(

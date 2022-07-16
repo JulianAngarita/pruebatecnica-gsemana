@@ -1,5 +1,6 @@
 import axios from 'axios';
+import envVariables from './env-variables';
 
 export const axiosClient = axios.create({
-    baseUrl: 'https://dummyapi.io/data/v1/'
+    baseUrl: envVariables.baseUrl
 })
