@@ -11,9 +11,10 @@ import bg from '../../assets/69.jpeg'
 import { getTags } from '../../services/tag/tag-srv';
 import MessageModal from '../modals/message-modal';
 import ModalCreatePost from '../modals/modal-create-post';
+import PostComponent from '../post/post-component';
 
 const BodyComponent = () => {
-
+    const [posts, setPosts] = useState([])
     const [ messageModalStatus, setMessageModalStatus ] = useState({
         activo: false,
         mensaje: ''
@@ -72,6 +73,15 @@ const BodyComponent = () => {
                     </Button>
                     </span>
                 </Header>
+                <Grid columns={2}>
+                  {posts !== undefined && posts.length>0 ?
+                    posts.map(i => (
+                        <PostComponent
+                            item={i}
+                        />
+                    ))
+                  : 'Aún no hay publicaciones para mostrar'}
+                </Grid>
                 <ModalCreatePost
                     setMessageModalStatus={setMessageModalStatus}
                     status={messageModalStatus}
