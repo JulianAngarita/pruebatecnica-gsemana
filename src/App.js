@@ -1,8 +1,9 @@
-import HomePage from './pages/home/home-page';
+import UserPage from './pages/user/user-page';
+import PublicView from './routes/public-view/public-view';
 
 function App() {
   return (
-    <HomePage/>
+    <PublicView/>
   );
 }
 

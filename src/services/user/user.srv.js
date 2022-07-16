@@ -1,13 +1,12 @@
 import { axiosClient } from "../../config/axios";
 import { getAppId } from "../../config/appId";
 
-export const getTags = async() => {
+export const createUser = async(payload) => {
     getAppId();
     try {
-        const response = await axiosClient.get('/tag');
+        const response = await axiosClient.post('/user/create', payload);
         return response;
     } catch (error) {
-        console.log(error)
         return({
             data: {
                 status: false,

@@ -4,8 +4,6 @@ import HeaderComponent from '../../components/header/header-component';
 
 const HomePage = () => {
 
-    
-
     return(
         <Fragment>
             <HeaderComponent/>
