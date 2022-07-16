@@ -1,6 +1,17 @@
 import { axiosClient } from "../../config/axios";
 import { getAppId } from "../../config/appId";
 
+let userId = '';
+
+export const setUserId = id => {
+    console.log(id)
+    userId = id
+}
+
+export const getUserId = () => {
+    return userId
+}
+
 export const createUser = async(payload) => {
     getAppId();
     try {
@@ -10,8 +21,9 @@ export const createUser = async(payload) => {
         return({
             data: {
                 status: false,
-                result: 'Error al consultar'
+                result: 'Error al crear el usuario'
             }
         })
     }
 }
+

@@ -1,10 +1,18 @@
 import React, {useState} from 'react';
 import {Grid, Form, Segment, Button, Header} from 'semantic-ui-react'
 import imgBackGround from '../../assets/background.jpeg';
+import MessageModal from '../../components/modals/message-modal';
 import { initialUserState } from '../../initial-states/user-istate';
+import { createUser, setUserId } from '../../services/user/user.srv';
+import { Navigate } from "react-router-dom";
 
 const UserPage = () => {
 
+    const [ messageModalStatus, setMessageModalStatus ] = useState({
+        activo: false,
+        mensaje: ''
+    })
+    const [ navigate, setNavigate ] = useState(false);
     const [newUser, setNewUser] = useState(Object.assign({}, initialUserState));
 
     const handleChangeUser = (e, {name, value}) => {
@@ -14,22 +22,39 @@ const UserPage = () => {
         })
     }
 
+    const createNewUser = async () => {
+        const response = await createUser(newUser);
+        if(response.data.status === false) {
+            setMessageModalStatus({
+                ...messageModalStatus,
+                activo: true,
+                mensaje: response.data.result
+            })
+            return;
+        }
+        setUserId(response.data.id)
+        return setNavigate(!navigate);
+    }   
+
     return(
         <Grid
-        centered 
-        style={{
-            minHeight:"105vh", 
-            backgroundImage:`url(${imgBackGround})`, 
-            backgroundSize:"cover", 
-            backgroundRepeat:"no-repeat", 
-            backgroundPosition:"center"
-        }} 
-        verticalAlign="middle">
+            centered 
+            style={{
+                minHeight:"105vh", 
+                backgroundImage:`url(${imgBackGround})`, 
+                backgroundSize:"cover", 
+                backgroundRepeat:"no-repeat", 
+                backgroundPosition:"center"
+            }} 
+            verticalAlign="middle"
+        >
+        {navigate ? <Navigate to='/home' replace={true}/> :null}
+        
         <Grid.Column style={{maxWidth:450}}>
             <Form>
                 <Segment stacked>
                     <Header as="h1">
-                        REGISTRARSE
+                        Crear usuario
                     </Header>
                     <Form.Input 
                         label="Nombre"
@@ -53,16 +78,17 @@ const UserPage = () => {
                         <Button
                             size='small'
                             style={{backgroundColor:'blue', color:'white', fontWeight: "bold"}}
+                            onClick={createNewUser}
                         >
-                        CREAR CUENTA
+                        CREAR USUARIO
                     </Button>
                 </Segment>
             </Form>
         </Grid.Column>
-        {/* <ModalMensaje
-            estatus={modalMensajeEstatus}
-            setModalMensajeEstatus={setModalMensajeEstatus}
-        /> */}
+        <MessageModal
+            status={messageModalStatus}
+            setMessageModalStatus={setMessageModalStatus}
+        />
     </Grid>
     );
 }

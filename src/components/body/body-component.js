@@ -9,22 +9,27 @@ import {
   } from 'semantic-ui-react'
 import bg from '../../assets/69.jpeg'
 import { getTags } from '../../services/tag/tag-srv';
+import MessageModal from '../modals/message-modal';
 import ModalCreatePost from '../modals/modal-create-post';
 
 const BodyComponent = () => {
 
+    const [ messageModalStatus, setMessageModalStatus ] = useState({
+        activo: false,
+        mensaje: ''
+    })
     const [tags, setTags] = useState([]);
     const [showModal, setShowModal] = useState(false);
 
     const tagsConsult = async () => {
         const tags = await getTags();
-        setTags(tags);
+        setTags(tags.data);
     }
-
+    
     useEffect(() => {
         tagsConsult()
     }, [])
-    console.log(tags);
+
     return(
         <Grid
             columns={3}
@@ -68,13 +73,16 @@ const BodyComponent = () => {
                     </span>
                 </Header>
                 <ModalCreatePost
+                    setMessageModalStatus={setMessageModalStatus}
+                    status={messageModalStatus}
                     showModal={showModal}
                     setShowModal={setShowModal}
+                    options={tags}
                 />
-                {/* <ModalMensaje
-                    estatus={modalMensajeEstatus}
-                    setModalMensajeEstatus={setModalMensajeEstatus}
-                /> */}
+                <MessageModal
+                    status={messageModalStatus}
+                    setMessageModalStatus={setMessageModalStatus}
+                />
                 </Container>
             </Grid.Row>
           </Grid>

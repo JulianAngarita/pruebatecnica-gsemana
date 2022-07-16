@@ -1,14 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Modal, Icon, Form, TextArea, Popup, Button, Dropdown} from 'semantic-ui-react';
 import bg from '../../assets/69.jpeg'
+import { initialPostState } from '../../initial-states/post-istate';
+import { createPost } from '../../services/post/post-srv';
+import { getUserId } from '../../services/user/user.srv';
 
 const ModalCreatePost = ({
     showModal,
-    setShowModal
+    setShowModal,
+    setMessageModalStatus,
+    messageModalStatus
 }) => {
 
+    const [newPost, setNewPost] = useState(Object.assign({}, initialPostState))
 
-    
+    const handleChangeNewPost = (e, {name, value}) => {
+        setNewPost({
+            ...newPost,
+            [name]:value
+        })
+    }
+
+    const createNewPost = async() => {
+        const payload = newPost;
+        payload.owner = getUserId()
+        const response = await createPost(payload);
+        if(response.status === 200) {
+            setMessageModalStatus({
+                ...messageModalStatus,
+                activo: true,
+                mensaje: 'Post creado'
+            });
+        }
+        setNewPost(Object.assign({}, initialPostState))
+        setShowModal(false)
+    }
+
     return(
         <Modal
         open={showModal}
@@ -23,12 +50,6 @@ const ModalCreatePost = ({
             <Form>
                 <h3> Crear Post </h3>
                 <Form.Group widths="equal">
-                    <Dropdown
-                        fluid
-                        multiple
-                        placeholder='Tags'
-                        options={[{key: 1, text: 'hola', value: 'hola'}]}
-                    />
                     <Form.Input
                         label={
                             <Popup
@@ -41,15 +62,19 @@ const ModalCreatePost = ({
                                 }
                             />
                         }
-                        name="linkFoto"
+                        name="image"
+                        value={newPost.image}
+                        onChange={handleChangeNewPost}
                     />
                 </Form.Group>
-                <h5>Comentarios</h5>
+                <h5>Contenido</h5>
                 <Form.Group widths="equal">
                     <TextArea
-                        name="contenido"
+                        name="text"
                         placeholder="Corta reflexion"
                         label="Contenido"
+                        value={newPost.text}
+                        onChange={handleChangeNewPost}
                     />
                 </Form.Group>
             </Form>
@@ -71,6 +96,7 @@ const ModalCreatePost = ({
                     color:"black",
                     borderRadius:25,
                 }}
+                onClick={() => createNewPost()}
             />
         </Modal.Actions>
     </Modal>
